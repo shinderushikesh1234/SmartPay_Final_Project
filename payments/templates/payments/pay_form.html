@@ -1,0 +1,18 @@
+{% extends 'payments/base.html' %}
+
+{% block content %}
+<div class="card p-4 shadow border-0" style="max-width: 450px; margin:auto;">
+  <h3 class="text-center mb-3">Pay {{ merchant.store_name }}</h3>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label class="form-label">Enter Amount (₹)</label>
+      <input type="number" name="amount" class="form-control" placeholder="e.g. 100" required min="1">
+    </div>
+
+    <button class="btn btn-success w-100">Proceed to Payment</button>
+  </form>
+</div>
+{% endblock %}

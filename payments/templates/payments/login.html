@@ -1,0 +1,12 @@
+{% extends 'payments/base.html' %}
+{% block content %}
+<div class="card p-4 shadow mx-auto" style="max-width:400px">
+  <h3 class="text-center mb-3">Login</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-dark w-100">Login</button>
+  </form>
+</div>
+{% endblock %}

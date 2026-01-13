@@ -1,0 +1,38 @@
+{% extends 'payments/base.html' %}
+
+{% block content %}
+<h2 class="mb-4 fw-bold text-center">Welcome to RushXPay</h2>
+<p class="text-center text-muted">Fast • Secure • Smart Payments</p>
+
+
+<div class="row justify-content-center">
+  {% for m in merchants %}
+  <div class="col-md-4 mb-4">
+    <div class="card shadow border-0 h-100" style="transition: 0.2s;">
+      <div class="card-body text-center">
+
+        <h5 class="card-title fs-4">🏪 {{ m.store_name }}</h5>
+        <p class="text-muted">UPI: {{ m.upi_id }}</p>
+
+        {% if m.qr_code %}
+          <img src="{{ m.qr_code.url }}" alt="QR Code"
+               class="img-fluid rounded shadow-sm mb-3"
+               style="max-height:180px;">
+        {% else %}
+          <p class="text-muted small">QR not generated yet</p>
+        {% endif %}
+
+        <a href="/pay/{{ m.id }}/" class="btn btn-success w-100 fw-semibold">
+          Pay Now
+        </a>
+
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="text-center text-muted">
+    <p>No merchants added yet.</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
