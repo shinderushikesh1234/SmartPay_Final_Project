@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
 
 from .models import Merchant, Transaction
 from .forms import RegisterForm
 
 import stripe
 
-# 🔐 Your Stripe test secret key (OK for local testing)
+
+# ==============================
+# STRIPE CONFIG (TEST MODE)
+# ==============================
 stripe.api_key = "sk_test_51Sp0ejRuhN5mraKvG0LXQC0rVwlFi5J3xNYAomKFkpjldlz7Clt3HRELbILShb8tPUG40DLCdLoVVyDFKFiaXUHa00lDcaPf4N"
+
+BASE_URL = "http://127.0.0.1:8000"   # change if needed
 
 
 # ---------------- HOME ----------------
@@ -33,18 +37,21 @@ def register(request):
     return render(request, 'payments/register.html', {'form': form})
 
 
-# ---------------- PAY (with amount input) ----------------
+# ---------------- PAY ----------------
 @login_required
 def pay(request, merchant_id):
     merchant = get_object_or_404(Merchant, id=merchant_id)
 
-    # If form submitted → create Stripe session
     if request.method == "POST":
         amount_rupees = int(request.POST.get("amount"))
         amount_paise = amount_rupees * 100
 
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
+
+            # ✅ correct Stripe-supported value
+            billing_address_collection='auto',
+
             line_items=[{
                 'price_data': {
                     'currency': 'inr',
@@ -56,11 +63,11 @@ def pay(request, merchant_id):
                 'quantity': 1,
             }],
             mode='payment',
-            success_url='http://127.0.0.1:8000/success/',
-            cancel_url='http://127.0.0.1:8000/',
+            success_url=f'{BASE_URL}/success/',
+            cancel_url=f'{BASE_URL}/',
         )
 
-        # Save transaction (for demo purpose)
+        # Save transaction (demo purpose)
         Transaction.objects.create(
             user=request.user,
             merchant=merchant,
@@ -70,7 +77,6 @@ def pay(request, merchant_id):
 
         return redirect(session.url)
 
-    # If GET request → show amount input page
     return render(request, 'payments/pay_form.html', {
         'merchant': merchant
     })
