@@ -9,3 +9,4 @@ RushXPay is a full-stack Django-based digital payment platform featuring:
 - Easy payment method 
 - latest version with high demand
 - Soliving the main problem in Dmart or any store ragarding QR code ReScan
+- Need to implement more features
