@@ -14,3 +14,4 @@ RushXPay is a full-stack Django-based digital payment platform featuring:
 
 //entered
 //Removing issue
+//Gather glitch
